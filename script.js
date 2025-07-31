@@ -53,7 +53,7 @@ function initForm(){
     byId('avgPerDiner').value = out;
     setMini('calc:'+out);
   }
-  ['input','change','blur','keyup'].forEach(function(ev){
+  ['input','change','blur','keyup','keypress'].forEach(function(ev){
     byId('diners').addEventListener(ev, updateAvg);
     byId('total').addEventListener(ev, updateAvg);
   });
@@ -63,14 +63,26 @@ function initForm(){
   var starsEl=byId('rating'); var hidden=byId('ratingValue');
   function paint(v){var bs=starsEl.querySelectorAll('button[data-value]');for(var i=0;i<bs.length;i++){var val=parseInt(bs[i].getAttribute('data-value'),10);var on=val<=v;bs[i].classList.toggle('filled',on);bs[i].setAttribute('aria-pressed',on?'true':'false');}}
   setStep('bindStars');
-  starsEl.addEventListener('click', function(e){
-    var b = e.target && e.target.closest ? e.target.closest('button[data-value]') : null;
-    if(!b) return;
-    hidden.value=b.getAttribute('data-value');
-    paint(parseInt(hidden.value,10)||0);
-    setStep('star:'+hidden.value);
+  // Manejar clics y toques para valoración por estrellas
+  ['click','touchstart','pointerdown','mousedown'].forEach(function(evt){
+    starsEl.addEventListener(evt,function(e){
+      var b = e.target && e.target.closest ? e.target.closest('button[data-value]') : null;
+      if(!b) return;
+      hidden.value = b.getAttribute('data-value');
+      paint(parseInt(hidden.value,10)||0);
+      setStep('star:'+hidden.value);
+      e.preventDefault();
+    }, {passive:false});
   });
-  byId('ratingClear').addEventListener('click',function(){hidden.value='0';paint(0);setStep('star:0');});
+  // Manejar limpieza de valoración (poner rating a 0)
+  ['click','touchstart','pointerdown','mousedown'].forEach(function(evt){
+    byId('ratingClear').addEventListener(evt,function(e){
+      hidden.value='0';
+      paint(0);
+      setStep('star:0');
+      e.preventDefault();
+    }, {passive:false});
+  });
 
   byId('selfTest').addEventListener('click', function(){
     byId('diners').value='4';
