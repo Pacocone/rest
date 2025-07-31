@@ -2,7 +2,7 @@
 'use strict';
 
 /* === Utils === */
-var DB_KEY='visitas_restaurantes_v1348';
+var DB_KEY='visitas_restaurantes_v1349';
 var RECENT_FRIENDS_KEY='rt_recent_friends_v1';
 function byId(id){return document.getElementById(id);}
 function fmtEUR(n){try{return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n||0);}catch(e){return (Math.round((n||0)*100)/100).toFixed(2)+' €';}}
