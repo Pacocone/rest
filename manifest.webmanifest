@@ -1,8 +1,13 @@
 {
   "name": "Mis Restaurantes",
   "short_name": "Restaurantes",
+  "id": "/myrestaurants/",
+  "scope": "/myrestaurants/",
   "start_url": "/myrestaurants/index.html",
   "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
   "background_color": "#0b0f19",
   "theme_color": "#0b0f19",
   "icons": [
@@ -16,10 +21,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "id": "/myrestaurants/",
-  "scope": "/myrestaurants/",
-  "display_override": [
-    "standalone"
   ]
 }
