@@ -8,16 +8,16 @@
 <title>Mis Restaurantes</title>
 <meta name="theme-color" content="#0b0f19" />
 <link rel="manifest" href="manifest.webmanifest" />
-<link rel="stylesheet" href="styles.css?v=1363" />
+<link rel="stylesheet" href="styles.css?v=1364" />
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
 <script>(function(){try{var p=localStorage.getItem('rt_theme')||'system';var d=false;if(p==='dark')d=true;else if(p==='light')d=false;else{var m=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;d=!!(m&&m.matches);}if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 <style>#errbar{position:fixed;left:0;right:0;bottom:0;background:#b91c1c;color:#fff;padding:8px 12px;font-size:14px;z-index:9999;display:none}#errbar .small{opacity:.9;font-size:12px}</style>
 </head><body>
 <div id="errbar"></div>
-<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.6.3</small></h1>
+<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.6.4</small></h1>
 <div class="actions"><span id="themeLabel" class="badge">Tema: —</span>
 <div class="theme-chips"><button class="chip" id="chipDark" type="button">🌙 Oscuro</button><button class="chip" id="chipLight" type="button">☀️ Claro</button><button class="chip" id="chipSystem" type="button">🖥️ Automático</button></div>
-<button id="installBtn" class="chip" style="display:none" type="button">⬇️ Instalar</button><span id="jsStatus" class="badge ok">JS iniciando…</span><span id="miniDiag" class="badge">—</span></div></header>
+<button id="installBtn" class="chip" style="display:none" type="button">⬇️ Instalar</button><span id="jsStatus" class="badge ok">JS iniciando…</span><span id="miniDiag" class="badge">—</span><span id="stepDiag" class="badge">—</span></div></header>
 <nav class="tabs scrollable" role="tablist" aria-label="Secciones">
 <button class="tab active" data-tab="add" aria-selected="true">Añadir visita</button>
 <button class="tab" data-tab="summary" aria-selected="false">Resumen</button>
@@ -38,7 +38,7 @@
 <label class="full"><span>Observaciones</span><textarea id="notes" rows="3" placeholder="Comida, servicio, platos destacados..."></textarea></label>
 <div class="attachments-field full"><span>Tickets / Fotos (opcional)</span><input type="file" id="attInput" multiple accept="image/*,.pdf" capture="environment" /><div id="attPreview" class="attachments-grid" aria-live="polite"></div><div class="muted" style="margin-top:6px;">Los adjuntos se guardan <strong>solo en este dispositivo</strong> (IndexedDB). No se comparten.</div></div>
 <datalist id="restaurantList"></datalist>
-</div><div class="form-actions"><button type="button" id="cancelEdit" class="btn secondary" style="display:none">Cancelar edición</button><button type="submit" id="submitBtn" class="btn primary">Guardar visita</button></div></form></div>
+</div><div class="form-actions"><button type="button" id="cancelEdit" class="btn secondary" style="display:none">Cancelar edición</button><button type="submit" id="submitBtn" class="btn primary">Guardar visita</button><button type="button" id="selfTest" class="btn outline">🔎 Probar cálculo y estrellas</button></div></form></div>
 <div class="card"><h3>Últimas visitas</h3><ul id="recentList" class="list"></ul></div></section>
 <section id="tab-summary" class="tabpanel" role="tabpanel"><div class="card"><h2>Resumen por restaurante y año</h2><div class="table-wrap"><table id="summaryTable"><thead><tr><th>Restaurante</th><th>Año</th><th>Visitas</th><th>€/persona</th><th>⭐ media</th></tr></thead><tbody></tbody></table></div></div></section>
 <section id="tab-history" class="tabpanel" role="tabpanel"><div class="card"><h2>Historial por restaurante</h2><div class="filters"><label><span>Selecciona restaurante</span><select id="restaurantFilter"><option value="">— Elige uno —</option></select></label></div><div id="historyContainer"></div></div></section>
@@ -70,7 +70,7 @@
       msg = (prefix?prefix+': ':'') + m + (f?(' @'+f+':'+ln+':'+cn):'');
     }
     bar.style.display='block';
-    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1363 — UA: '+navigator.userAgent+'</div>';
+    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1364 — UA: '+navigator.userAgent+'</div>';
   }
   window.addEventListener('error', function(e){ showErr(e); });
   window.addEventListener('unhandledrejection', function(e){ showErr(e.reason||e, 'Promesa rechazada'); });
@@ -80,8 +80,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer
         onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js';s.defer=true;s.onerror=function(){__SHOW_ERR__('No se pudo cargar supabase-js desde dos CDNs');};document.head.appendChild(s);})();"></script>
-<script src="config.js?v=1363" defer></script>
-<script src="script.js?v=1363" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
+<script src="config.js?v=1364" defer></script>
+<script src="script.js?v=1364" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';document.getElementById('stepDiag').textContent='boot';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
 
 <script>
 (function(){var dp=null,btn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(btn){btn.style.display='inline-flex';btn.onclick=function(){btn.disabled=true;dp.prompt();dp.userChoice.then(function(){btn.disabled=false;});};}});window.addEventListener('appinstalled',function(){if(btn){btn.style.display='none';}});})();
