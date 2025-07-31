@@ -8,11 +8,11 @@
 <title>Mis Restaurantes</title>
 <meta name="theme-color" content="#0b0f19" />
 <link rel="manifest" href="manifest.webmanifest" />
-<link rel="stylesheet" href="styles.css?v=1345" />
+<link rel="stylesheet" href="styles.css?v=1347" />
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
 <script>(function(){try{var p=localStorage.getItem('rt_theme')||'system';var d=false;if(p==='dark')d=true;else if(p==='light')d=false;else{var m=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;d=!!(m&&m.matches);}if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 </head><body>
-<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.4.5 (rest PWA)</small></h1>
+<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.5.1 (rest sync)</small></h1>
 <div class="actions"><span id="themeLabel" class="badge">Tema: —</span>
 <div class="theme-chips"><button class="chip" id="chipDark" type="button">🌙 Oscuro</button><button class="chip" id="chipLight" type="button">☀️ Claro</button><button class="chip" id="chipSystem" type="button">🖥️ Automático</button></div>
 <button id="installBtn" class="chip" style="display:none" type="button">⬇️ Instalar</button><span id="jsStatus" class="badge ok">JS iniciando…</span></div></header>
@@ -54,7 +54,7 @@
 </main>
 <footer class="app-footer safe-bottom"><button id="exportBtn" class="btn secondary">Exportar</button><label class="btn secondary filelabel">Importar<input type="file" id="importInput" accept="application/json" hidden /></label><button id="clearAll" class="btn danger outline">Borrar todo</button><span class="muted">Datos locales; adjuntos no se comparten. Con amigos solo va el resumen.</span></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=1345"></script>
-<script src="script.js?v=1345"></script>
+<script src="config.js?v=1347"></script>
+<script src="script.js?v=1347"></script>
 <script>(function(){var dp=null,btn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(btn){btn.style.display='inline-flex';btn.onclick=function(){btn.disabled=true;dp.prompt();dp.userChoice.then(function(){btn.disabled=false;});};}});window.addEventListener('appinstalled',function(){if(btn){btn.style.display='none';}});})();if('serviceWorker'in navigator && location.hostname!=='localhost' && location.hostname!=='127.0.0.1'){window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js');});}</script>
 </body></html>
