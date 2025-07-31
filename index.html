@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mis Restaurantes</title>
-  <meta name="theme-color" content="#0b0e14" />
+  <meta name="theme-color" content="#0b0f19" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
@@ -26,7 +26,7 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>🍽️ Mis Restaurantes <small class="ver">v13.2</small></h1>
+    <h1>🍽️ Mis Restaurantes <small class="ver">v13.2 (cfg2)</small></h1>
     <div class="actions">
       <span id="themeLabel" class="badge">Tema: —</span>
       <div class="theme-chips">
@@ -47,7 +47,6 @@
   </nav>
 
   <main>
-    <!-- Añadir -->
     <section id="tab-add" class="tabpanel active" role="tabpanel">
       <div class="card">
         <h2>Nueva visita</h2>
@@ -123,7 +122,6 @@
       </div>
     </section>
 
-    <!-- Resumen -->
     <section id="tab-summary" class="tabpanel" role="tabpanel">
       <div class="card">
         <h2>Resumen por restaurante y año</h2>
@@ -136,7 +134,6 @@
       </div>
     </section>
 
-    <!-- Historial -->
     <section id="tab-history" class="tabpanel" role="tabpanel">
       <div class="card">
         <h2>Historial por restaurante</h2>
@@ -149,7 +146,6 @@
       </div>
     </section>
 
-    <!-- Explorar -->
     <section id="tab-explore" class="tabpanel" role="tabpanel">
       <div class="card">
         <h2>Explorar por ciudades y valoración</h2>
@@ -175,7 +171,6 @@
       </div>
     </section>
 
-    <!-- Amigos -->
     <section id="tab-friends" class="tabpanel" role="tabpanel">
       <div class="card">
         <h2>Cuenta y compartir</h2>
@@ -228,8 +223,8 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js?v=1310"></script>
-  <script src="script.js?v=1310"></script>
+  <script src="config.js?v=1320"></script>
+  <script src="script.js?v=1320"></script>
   <script>
   if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
     window.addEventListener('load', function(){ navigator.serviceWorker.register('service-worker.js'); });

@@ -2,7 +2,7 @@
 'use strict';
 
 /* ===== Utilidades ===== */
-var DB_KEY='visitas_restaurantes_v131';
+var DB_KEY='visitas_restaurantes_v132';
 function fmtEUR(n){ try{ return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n||0); }catch(e){ return (Math.round((n||0)*100)/100).toFixed(2)+' €'; } }
 function fmt2(n){ return (Math.round((n||0)*100)/100).toFixed(2); }
 function $(s){ return document.querySelector(s); }
@@ -16,7 +16,7 @@ function uid(){ return Math.random().toString(36).slice(2)+Date.now().toString(3
 function escapeHTML(str){ var s=(str==null?'':String(str)); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 /* ===== Tema ===== */
-function updateMetaThemeColor(){ var meta=document.querySelector('meta[name="theme-color"]'); var isDark=document.documentElement.getAttribute('data-theme')==='dark'; if(meta) meta.setAttribute('content', isDark ? '#0b0e14' : '#ff4d6d'); }
+function updateMetaThemeColor(){ var meta=document.querySelector('meta[name="theme-color"]'); var isDark=document.documentElement.getAttribute('data-theme')==='dark'; if(meta) meta.setAttribute('content', isDark ? '#0b0f19' : '#ff4d6d'); }
 function applyTheme(theme){
   if(theme==='system'){ document.documentElement.removeAttribute('data-theme'); }
   else if(theme==='dark'){ document.documentElement.setAttribute('data-theme','dark'); }
@@ -51,7 +51,7 @@ function attDelete(key){ return openAttDB().then(function(db){ return new Promis
 var stagedAttKeys=[];
 function handleAttInput(files){
   if(!files||!files.length) return;
-  var i; function next(i){ if(i>=files.length){ renderAttPreview(); return; } var f=files[i]; var key='a_'+uid(); attPut(key,f).then(function(){ stagedAttKeys.push(key); next(i+1); }); }
+  function next(i){ if(i>=files.length){ renderAttPreview(); return; } var f=files[i]; var key='a_'+uid(); attPut(key,f).then(function(){ stagedAttKeys.push(key); next(i+1); }); }
   next(0);
 }
 function renderAttPreview(){

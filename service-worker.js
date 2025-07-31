@@ -1,1 +1,1 @@
-const CACHE_NAME='rt-v13.1';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());
+const CACHE_NAME='rt-v13.2';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());

@@ -3,8 +3,8 @@
   "short_name": "Restaurantes",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b0e14",
-  "theme_color": "#0b0e14",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
   "icons": [
     {
       "src": "icons/icon-192.png",
