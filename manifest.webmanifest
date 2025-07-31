@@ -1,9 +1,9 @@
 {
   "name": "Mis Restaurantes",
   "short_name": "Restaurantes",
-  "id": "/myrest/",
-  "scope": "/myrest/",
-  "start_url": "/myrest/index.html",
+  "id": "/rest/",
+  "scope": "/rest/",
+  "start_url": "/rest/index.html",
   "display": "standalone",
   "display_override": [
     "standalone"
