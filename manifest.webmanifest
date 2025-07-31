@@ -1,7 +1,7 @@
 {
   "name": "Mis Restaurantes",
   "short_name": "Restaurantes",
-  "start_url": "./index.html",
+  "start_url": "/myrestaurants/index.html",
   "display": "standalone",
   "background_color": "#0b0f19",
   "theme_color": "#0b0f19",
@@ -16,5 +16,10 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "id": "/myrestaurants/",
+  "scope": "/myrestaurants/",
+  "display_override": [
+    "standalone"
   ]
 }

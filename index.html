@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mis Restaurantes</title>
   <meta name="theme-color" content="#0b0f19" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Restaurantes" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
@@ -26,7 +29,7 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>🍽️ Mis Restaurantes <small class="ver">v13.2 (cfg2)</small></h1>
+    <h1>🍽️ Mis Restaurantes <small class="ver">v13.3 (PWA)</small></h1>
     <div class="actions">
       <span id="themeLabel" class="badge">Tema: —</span>
       <div class="theme-chips">
@@ -34,6 +37,7 @@
         <button class="chip" id="chipLight" type="button">☀️ Claro</button>
         <button class="chip" id="chipSystem" type="button">🖥️ Automático</button>
       </div>
+      <button id="installBtn" class="chip" style="display:none" type="button">⬇️ Instalar</button>
       <span id="jsStatus" class="badge ok">JS iniciando…</span>
     </div>
   </header>
@@ -230,5 +234,17 @@
     window.addEventListener('load', function(){ navigator.serviceWorker.register('service-worker.js'); });
   }
   </script>
+
+  <script>
+  (function(){
+    var deferredPrompt=null; var btn;
+    window.addEventListener('beforeinstallprompt', function(e){
+      e.preventDefault(); deferredPrompt=e; btn=document.getElementById('installBtn');
+      if(btn){ btn.style.display='inline-flex'; btn.onclick=function(){ btn.disabled=true; deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(choice){ btn.disabled=false; if(choice && choice.outcome==='accepted'){ btn.textContent='Instalando…'; } }); }; }
+    });
+    window.addEventListener('appinstalled', function(){ var b=document.getElementById('installBtn'); if(b){ b.style.display='none'; } });
+  })();
+  </script>
+
 </body>
 </html>
