@@ -2,7 +2,7 @@
 'use strict';
 
 /* === Utils === */
-var DB_KEY='visitas_restaurantes_v1364';
+var DB_KEY='visitas_restaurantes_v1365';
 var RECENT_FRIENDS_KEY='rt_recent_friends_v1';
 function byId(id){return document.getElementById(id);}
 function setStep(msg){var el=byId('stepDiag'); if(el){el.textContent=msg;}}
@@ -179,4 +179,5 @@ document.addEventListener('DOMContentLoaded',function(){
   try{var c=ensureSupa(); if(c){c.auth.onAuthStateChange(function(){updateAccountInfo(); if(SYNC_ENABLED){ syncDownVisits(); }});}}catch(e){}
   setStep('ready');
 });
+}
 })();
