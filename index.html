@@ -2,46 +2,39 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mis Restaurantes</title>
   <meta name="theme-color" content="#0b0e14" />
   <link rel="manifest" href="manifest.webmanifest" />
-  
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <script>
   (function(){
     try{
       var pref = (function(){ try{ return localStorage.getItem('rt_theme') || 'system'; }catch(e){ return 'system'; }})();
       var isDark = false;
-      if (pref === 'dark') { isDark = true; }
-      else if (pref === 'light') { isDark = false; }
+      if (pref === 'dark') isDark = true;
+      else if (pref === 'light') isDark = false;
       else {
         var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
         isDark = !!(mql && mql.matches);
       }
-      if (isDark) {
-        document.documentElement.setAttribute('data-theme','dark');
-        // Añadimos body.dark en cuanto cargue el body
-        document.addEventListener('DOMContentLoaded', function(){
-          try{ document.body.className += (document.body.className ? ' ' : '') + 'dark'; }catch(e){}
-        });
-      }
+      if (isDark) document.documentElement.setAttribute('data-theme','dark');
     }catch(e){}
   })();
   </script>
-
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
 </head>
 <body>
   <header class="app-header">
-    <h1>🍽️ Mis Restaurantes <small style="font-weight:600;opacity:.8">v12.4.7</small></h1>
-    <div class="actions"><span id="themeLabel" class="badge">Tema: —</span><div class="theme-chips"><button class="chip" id="chipDark" type="button">🌙 Oscuro</button><button class="chip" id="chipLight" type="button">☀️ Claro</button><button class="chip" id="chipSystem" type="button">🖥️ Automático</button></div><span id="jsStatus" class="badge" style="background:#10b981;color:#fff">JS OK</span>
-      <button id="themeToggle" class="btn secondary" title="Cambiar tema">Modo</button>
-      <button id="exportBtn" class="btn secondary">Exportar</button>
-      <label class="btn secondary filelabel">
-        Importar
-        <input type="file" id="importInput" accept="application/json" hidden />
-      </label>
+    <h1>🍽️ Mis Restaurantes <small class="ver">v13.2</small></h1>
+    <div class="actions">
+      <span id="themeLabel" class="badge">Tema: —</span>
+      <div class="theme-chips">
+        <button class="chip" id="chipDark" type="button">🌙 Oscuro</button>
+        <button class="chip" id="chipLight" type="button">☀️ Claro</button>
+        <button class="chip" id="chipSystem" type="button">🖥️ Automático</button>
+      </div>
+      <span id="jsStatus" class="badge ok">JS iniciando…</span>
     </div>
   </header>
 
@@ -54,7 +47,7 @@
   </nav>
 
   <main>
-    <!-- Añadir visita -->
+    <!-- Añadir -->
     <section id="tab-add" class="tabpanel active" role="tabpanel">
       <div class="card">
         <h2>Nueva visita</h2>
@@ -62,11 +55,11 @@
           <div class="grid">
             <label>
               <span>Restaurante</span>
-              <input type="text" id="restaurant" placeholder="Nombre del restaurante" required list="restaurantList" autocomplete="organization" />
+              <input type="text" id="restaurant" placeholder="Nombre del restaurante" required list="restaurantList" />
             </label>
             <label>
               <span>Ciudad</span>
-              <input type="text" id="city" placeholder="Ej: Madrid" autocomplete="address-level2" />
+              <input type="text" id="city" placeholder="Ej: Madrid" />
             </label>
             <label>
               <span>Fecha</span>
@@ -107,12 +100,14 @@
               <span>Observaciones</span>
               <textarea id="notes" rows="3" placeholder="Comida, servicio, platos destacados..."></textarea>
             </label>
-            <div class="photos-field full">
-              <span>Fotos (opcional)</span>
-              <input type="file" id="photosInput" accept="image/*" multiple capture="environment">
-              <div id="photosPreview" class="photos-grid" aria-live="polite"></div>
-              <div class="muted" style="margin-top:6px;">Las fotos quedan <strong>solo en este dispositivo</strong> (no se comparten). Puedes añadir o quitar antes de guardar.</div>
+
+            <div class="attachments-field full">
+              <span>Tickets / Fotos (opcional)</span>
+              <input type="file" id="attInput" accept="image/*,.pdf" multiple capture="environment" />
+              <div id="attPreview" class="attachments-grid" aria-live="polite"></div>
+              <div class="muted" style="margin-top:6px;">Los adjuntos se guardan <strong>solo en este dispositivo</strong> (IndexedDB). No se comparten.</div>
             </div>
+
             <datalist id="restaurantList"></datalist>
           </div>
           <div class="form-actions">
@@ -132,17 +127,9 @@
     <section id="tab-summary" class="tabpanel" role="tabpanel">
       <div class="card">
         <h2>Resumen por restaurante y año</h2>
-        <div class="filters" style="margin-bottom:8px;"><label><span>Vista</span><select id="summaryViewMode"><option value="auto" selected>Automática</option><option value="table">Tabla</option><option value="cards">Tarjetas</option></select></label></div><div class="table-wrap">
+        <div class="table-wrap">
           <table id="summaryTable">
-            <thead>
-              <tr>
-                <th>Restaurante</th>
-                <th>Año</th>
-                <th>Visitas</th>
-                <th>Precio medio / comensal</th>
-                <th>Valoración media</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Restaurante</th><th>Año</th><th>Visitas</th><th>€/persona</th><th>⭐ media</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -154,19 +141,8 @@
       <div class="card">
         <h2>Historial por restaurante</h2>
         <div class="filters">
-          <label>
-            <span>Selecciona restaurante</span>
-            <select id="restaurantFilter">
-              <option value="">— Elige uno —</option>
-            </select>
-          </label>
-          <label>
-            <span>Vista</span>
-            <select id="historyViewMode">
-              <option value="auto" selected>Automática</option>
-              <option value="list">Lista</option>
-              <option value="cards">Tarjetas</option>
-            </select>
+          <label><span>Selecciona restaurante</span>
+            <select id="restaurantFilter"><option value="">— Elige uno —</option></select>
           </label>
         </div>
         <div id="historyContainer"></div>
@@ -178,71 +154,17 @@
       <div class="card">
         <h2>Explorar por ciudades y valoración</h2>
         <div class="filters">
-          <label>
-            <span>Ciudad</span>
-            <select id="cityFilter">
-              <option value="">Todas</option>
-            </select>
+          <label><span>Ciudad</span><select id="cityFilter"><option value="">Todas</option></select></label>
+          <label><span>Valoración mínima</span>
+            <select id="minRating"><option value="0">0+</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5</option></select>
           </label>
-          <label>
-            <span>Vista</span>
-            <select id="historyViewMode">
-              <option value="auto" selected>Automática</option>
-              <option value="list">Lista</option>
-              <option value="cards">Tarjetas</option>
-            </select>
-          </label>
-          <label>
-            <span>Valoración mínima</span>
-            <select id="minRating">
-              <option value="0">0+</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-              <option value="5">5</option>
-            </select>
-          </label>
-          <label>
-            <span>Vista</span>
-            <select id="historyViewMode">
-              <option value="auto" selected>Automática</option>
-              <option value="list">Lista</option>
-              <option value="cards">Tarjetas</option>
-            </select>
-          </label>
-          <label>
-            <span>Ordenar</span>
+          <label><span>Ordenar</span>
             <select id="sortBy">
               <option value="ratingDesc">Mejor valoración → peor</option>
               <option value="ratingAsc">Peor valoración → mejor</option>
               <option value="avgPPAsc">Precio medio ↑</option>
               <option value="avgPPDesc">Precio medio ↓</option>
               <option value="visitsDesc">Más visitas</option>
-            </select>
-          </label>
-          <label>
-            <span>Vista</span>
-            <select id="historyViewMode">
-              <option value="auto" selected>Automática</option>
-              <option value="list">Lista</option>
-              <option value="cards">Tarjetas</option>
-            </select>
-          </label>
-          <label>
-            <span>Vista</span>
-            <select id="viewMode">
-              <option value="auto" selected>Automática</option>
-              <option value="table">Tabla</option>
-              <option value="cards">Tarjetas</option>
-            </select>
-          </label>
-          <label>
-            <span>Vista</span>
-            <select id="historyViewMode">
-              <option value="auto" selected>Automática</option>
-              <option value="list">Lista</option>
-              <option value="cards">Tarjetas</option>
             </select>
           </label>
         </div>
@@ -253,78 +175,65 @@
       </div>
     </section>
 
-    <!-- Amigos (cuenta simplificada; el resto se puede activar después) -->
+    <!-- Amigos -->
     <section id="tab-friends" class="tabpanel" role="tabpanel">
       <div class="card">
-        <h2>Cuenta</h2>
+        <h2>Cuenta y compartir</h2>
         <div class="grid">
-          <label>
-            <span>Email</span>
-            <input type="email" id="authEmail" placeholder="tu@correo.com" />
-          </label>
-          <div style="display:flex; align-items:end; gap:8px; flex-wrap:wrap;">
+          <label><span>Email</span><input type="email" id="authEmail" placeholder="tu@correo.com" /></label>
+          <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;">
             <button id="sendMagicLink" class="btn primary">Iniciar sesión (enlace mágico)</button>
             <button id="checkSessionBtn" class="btn secondary">Comprobar sesión</button>
             <button id="signOutBtn" class="btn outline">Cerrar sesión</button>
           </div>
-          <label class="full">
-            <span>Nombre de usuario</span>
-            <input type="text" id="usernameInput" placeholder="ej: casapaco_85" />
-          </label>
-          <label>
-            <span>Tema</span>
-            <select id="themeSelect">
-              <option value="system">Automático (según sistema)</option>
-              <option value="light">Claro</option>
-              <option value="dark">Oscuro</option>
-            </select>
-          </label>
-          <div style="display:flex; align-items:end; gap:8px;">
+          <label class="full"><span>Nombre de usuario</span><input type="text" id="usernameInput" placeholder="ej: casapaco_85" /></label>
+          <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;">
             <button id="saveUsernameBtn" class="btn secondary">Guardar nombre de usuario</button>
+            <button id="publishSummaryBtn" class="btn outline">Publicar/actualizar mi resumen</button>
           </div>
         </div>
 
         <details style="margin-top:8px;">
-          <summary class="advanced-summary">Configuración avanzada (opcional)</summary>
+          <summary class="advanced-summary">Configuración avanzada (Supabase)</summary>
           <div class="grid" style="margin-top:8px;">
-            <label>
-              <span>SUPABASE_URL</span>
-              <input type="url" id="supabaseUrlInput" placeholder="https://xxxxx.supabase.co" />
-            </label>
-            <label>
-              <span>SUPABASE_ANON_KEY</span>
-              <input type="text" id="supabaseAnonInput" placeholder="clave pública" />
-            </label>
-            <div style="display:flex; align-items:end; gap:8px;">
+            <label><span>SUPABASE_URL</span><input type="url" id="supabaseUrlInput" placeholder="https://xxxxx.supabase.co" /></label>
+            <label><span>SUPABASE_ANON_KEY</span><input type="text" id="supabaseAnonInput" placeholder="clave pública" /></label>
+            <div style="display:flex;align-items:end;gap:8px;flex-wrap:wrap;">
               <button id="saveSupabaseCfgBtn" class="btn secondary">Guardar configuración</button>
               <button id="clearSupabaseCfgBtn" class="btn danger outline">Borrar configuración</button>
             </div>
           </div>
-          <p class="muted">Se guardan solo en este dispositivo. Normalmente no necesitas tocar esto.</p>
+          <p class="muted">Se guardan solo en este dispositivo. Con esto podrás compartir tu resumen con amigos que te busquen por nombre de usuario.</p>
         </details>
 
         <div id="accountInfo" class="muted" style="margin-top:8px;"></div>
-        <div id="autoSyncNote" class="muted" style="margin-top:6px;">
-          La app sincroniza <strong>automáticamente</strong> tu resumen cuando añades o editas visitas.
+      </div>
+
+      <div class="card">
+        <h2>Ver resumen de un amigo</h2>
+        <div class="filters">
+          <label><span>Usuario del amigo</span><input type="text" id="friendUsername" placeholder="usuario_del_amigo" /></label>
+          <button id="loadFriendBtn" class="btn primary">Cargar resumen</button>
         </div>
+        <div id="friendSummaryContainer" style="margin-top:12px;"></div>
       </div>
     </section>
   </main>
 
   <footer class="app-footer">
+    <button id="exportBtn" class="btn secondary">Exportar</button>
+    <label class="btn secondary filelabel">Importar<input type="file" id="importInput" accept="application/json" hidden /></label>
     <button id="clearAll" class="btn danger outline">Borrar todo</button>
-    <span class="muted">Datos locales; con amigos solo se comparte el resumen agregado.</span>
+    <span class="muted">Datos locales; adjuntos no se comparten. Con amigos solo va el resumen.</span>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="script.js"></script>
+  <script src="config.js?v=1310"></script>
+  <script src="script.js?v=1310"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js').catch(()=>{});
-      });
-    }
+  if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    window.addEventListener('load', function(){ navigator.serviceWorker.register('service-worker.js'); });
+  }
   </script>
 </body>
 </html>
