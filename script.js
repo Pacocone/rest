@@ -2,7 +2,8 @@
 'use strict';
 
 /* === Utils === */
-var DB_KEY='visitas_restaurantes_v1365';
+// Actualizamos la clave de almacenamiento para separar los datos de versiones anteriores.
+var DB_KEY='visitas_restaurantes_v1371';
 var RECENT_FRIENDS_KEY='rt_recent_friends_v1';
 function byId(id){return document.getElementById(id);}
 function setStep(msg){var el=byId('stepDiag'); if(el){el.textContent=msg;}}
