@@ -70,7 +70,7 @@
       msg = (prefix?prefix+': ':'') + m + (f?(' @'+f+':'+ln+':'+cn):'');
     }
     bar.style.display='block';
-    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1370 — UA: '+navigator.userAgent+'</div>';
+    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1369 — UA: '+navigator.userAgent+'</div>';
   }
   window.addEventListener('error', function(e){ showErr(e); });
   window.addEventListener('unhandledrejection', function(e){ showErr(e.reason||e, 'Promesa rechazada'); });
@@ -82,8 +82,7 @@
         onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js';s.defer=true;s.onerror=function(){__SHOW_ERR__('No se pudo cargar supabase-js desde dos CDNs');};document.head.appendChild(s);})();"></script>
 <script src="config.js?v=1367" defer></script>
 <!-- Cargamos la nueva versión del script con número de versión actualizado para forzar recarga de caché. -->
-<!-- Actualizamos el parámetro de versión para forzar la recarga de la nueva versión del script -->
-<script src="script.js?v=1370" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';document.getElementById('stepDiag').textContent='boot';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
+<script src="script.js?v=1369" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';document.getElementById('stepDiag').textContent='boot';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
 
 <script>
 (function(){var dp=null,btn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(btn){btn.style.display='inline-flex';btn.onclick=function(){btn.disabled=true;dp.prompt();dp.userChoice.then(function(){btn.disabled=false;});};}});window.addEventListener('appinstalled',function(){if(btn){btn.style.display='none';}});})();
