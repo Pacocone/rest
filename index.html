@@ -14,7 +14,7 @@
 <style>#errbar{position:fixed;left:0;right:0;bottom:0;background:#b91c1c;color:#fff;padding:8px 12px;font-size:14px;z-index:9999;display:none}#errbar .small{opacity:.9;font-size:12px}</style>
 </head><body>
 <div id="errbar"></div>
-<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.7.1</small></h1>
+<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.7.3</small></h1>
 <div class="actions"><span id="themeLabel" class="badge">Tema: —</span>
 <div class="theme-chips"><button class="chip" id="chipDark" type="button">🌙 Oscuro</button><button class="chip" id="chipLight" type="button">☀️ Claro</button><button class="chip" id="chipSystem" type="button">🖥️ Automático</button></div>
 <button id="installBtn" class="chip" style="display:none" type="button">⬇️ Instalar</button><span id="jsStatus" class="badge ok">JS iniciando…</span><span id="miniDiag" class="badge">—</span><span id="stepDiag" class="badge">—</span></div></header>
@@ -70,7 +70,7 @@
       msg = (prefix?prefix+': ':'') + m + (f?(' @'+f+':'+ln+':'+cn):'');
     }
     bar.style.display='block';
-    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1372 — UA: '+navigator.userAgent+'</div>';
+    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1373 — UA: '+navigator.userAgent+'</div>';
   }
   window.addEventListener('error', function(e){ showErr(e); });
   window.addEventListener('unhandledrejection', function(e){ showErr(e.reason||e, 'Promesa rechazada'); });
@@ -84,7 +84,8 @@
 <!-- Cargamos la nueva versión del script con número de versión actualizado para forzar recarga de caché. -->
 <!-- Actualizamos el parámetro de versión para forzar la recarga de la nueva versión del script -->
 <!-- Actualizamos el parámetro de versión para forzar la recarga de la nueva versión del script -->
-<script src="script.js?v=1372" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';document.getElementById('stepDiag').textContent='boot';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
+<!-- Actualizamos el parámetro de versión para forzar la recarga de la nueva versión del script -->
+<script src="script.js?v=1373" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';document.getElementById('stepDiag').textContent='boot';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
 
 <script>
 (function(){var dp=null,btn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(btn){btn.style.display='inline-flex';btn.onclick=function(){btn.disabled=true;dp.prompt();dp.userChoice.then(function(){btn.disabled=false;});};}});window.addEventListener('appinstalled',function(){if(btn){btn.style.display='none';}});})();

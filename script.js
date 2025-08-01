@@ -3,7 +3,8 @@
 
 /* === Utils === */
 // Actualizamos la clave de almacenamiento para separar los datos de versiones anteriores.
-var DB_KEY='visitas_restaurantes_v1371';
+// Actualizamos la clave de almacenamiento para la versión 13.7.3
+var DB_KEY='visitas_restaurantes_v1373';
 var RECENT_FRIENDS_KEY='rt_recent_friends_v1';
 function byId(id){return document.getElementById(id);}
 function setStep(msg){var el=byId('stepDiag'); if(el){el.textContent=msg;}}
@@ -162,7 +163,8 @@ function renderRecentFriendsUI(){var dl=byId('friendUserList');if(dl){var list=g
 
 /* === Supabase (simple friends) + sesiones persistentes === */
 var SUPA={url:(window.APP_CONFIG&&window.APP_CONFIG.SUPABASE_URL)||(localStorage.getItem('rt_supabase_url')||''),anon:(window.APP_CONFIG&&window.APP_CONFIG.SUPABASE_ANON_KEY)||(localStorage.getItem('rt_supabase_anon')||'')};
-var supa=null;function ensureSupa(){if(!SUPA.url||!SUPA.anon)return null;try{if(!supa){supa=window.supabase.createClient(SUPA.url,SUPA.anon,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});}return supa;}catch(e){return null;}}
+// Deshabilitamos integración con Supabase: siempre retornamos null para evitar errores cuando no hay configuración.
+var supa=null;function ensureSupa(){return null;}
 function getCurrentUser(){var c=ensureSupa();if(!c)return Promise.resolve(null);return c.auth.getUser().then(function(r){return (r&&r.data&&r.data.user)||null;});}
 function signInWithEmail(email){var c=ensureSupa();if(!c)return Promise.reject(new Error('Configura SUPABASE_URL y ANON_KEY'));var redirect=location.origin+location.pathname;return c.auth.signInWithOtp({email:email,options:{emailRedirectTo:redirect}}).then(function(r){if(r&&r.error)throw r.error;return true;});}
 function signOut(){var c=ensureSupa();if(!c)return Promise.resolve();return c.auth.signOut();}
@@ -182,10 +184,21 @@ function mergeByNewest(localArr, remoteArr){var byId={};for(var i=0;i<localArr.l
 function syncDownVisits(){var c=ensureSupa(); if(!c) return Promise.resolve(false);return getCurrentUser().then(function(user){if(!user) return false;return c.from('visits').select('*').eq('owner_id', user.id).order('updated_at', {ascending: false}).then(function(res){if(res.error){console.warn('syncDown error',res.error); return false;}var remote=(res.data||[]).map(mapRemoteToLocal);state.visits=mergeByNewest(state.visits||[],remote);save();renderAll();return true;});});}
 function syncUpVisit(v){var c=ensureSupa(); if(!c) return Promise.resolve(false);return getCurrentUser().then(function(user){if(!user) return false;return c.from('visits').upsert(mapLocalToRemote(v,user.id)).then(function(res){if(res.error){console.warn('syncUp error',res.error);return false;}return true;});});}
 function syncDeleteVisit(id){var c=ensureSupa(); if(!c) return Promise.resolve(false);return getCurrentUser().then(function(user){if(!user) return false;return c.from('visits').delete().eq('owner_id',user.id).eq('id',id).then(function(res){if(res.error){console.warn('syncDel error',res.error);return false;}return true;});});}
-function bootstrapSessionAndSync(){var c=ensureSupa(); if(!c){updateAccountInfo(); return;}c.auth.getSession().then(function(){getCurrentUser().then(function(user){updateAccountInfo();if(user&&SYNC_ENABLED){syncDownVisits();}});});}
+// Simplificamos bootstrapSessionAndSync para no depender de Supabase en esta versión.
+function bootstrapSessionAndSync(){
+  // Simplemente actualizamos la información de la cuenta local (no autenticación remota).
+  try { updateAccountInfo(); } catch(_) {}
+  return;
+}
 
 /* === Friends UI === */
 function initFriends(){var urlIn=byId('supabaseUrlInput'),anonIn=byId('supabaseAnonInput');if(urlIn)urlIn.value=SUPA.url||'';if(anonIn)anonIn.value=SUPA.anon||'';var saveCfg=byId('saveSupabaseCfgBtn');if(saveCfg)saveCfg.addEventListener('click',function(){var u=urlIn.value.trim();var a=anonIn.value.trim();localStorage.setItem('rt_supabase_url',u);localStorage.setItem('rt_supabase_anon',a);SUPA.url=u;SUPA.anon=a;supa=null;updateAccountInfo();alert('Configuración guardada.');});var clearCfg=byId('clearSupabaseCfgBtn');if(clearCfg)clearCfg.addEventListener('click',function(){localStorage.removeItem('rt_supabase_url');localStorage.removeItem('rt_supabase_anon');SUPA.url=(window.APP_CONFIG&&window.APP_CONFIG.SUPABASE_URL)||'';SUPA.anon=(window.APP_CONFIG&&window.APP_CONFIG.SUPABASE_ANON_KEY)||'';supa=null;if(urlIn)urlIn.value=SUPA.url;if(anonIn)anonIn.value=SUPA.anon;updateAccountInfo();alert('Configuración borrada.');});var sendML=byId('sendMagicLink');if(sendML)sendML.addEventListener('click',function(){try{var email=byId('authEmail').value.trim();if(!email){alert('Introduce un email');return;}signInWithEmail(email).then(function(){alert('Te enviamos un enlace de inicio de sesión a tu correo.');}).catch(function(err){alert(err.message||err);});}catch(err){alert(err.message||err);}});var chk=byId('checkSessionBtn');if(chk)chk.addEventListener('click',function(){getCurrentUser().then(function(user){updateAccountInfo();alert(user?('Sesión activa: '+(user.email||user.id)):'No hay sesión activa.');});});var out=byId('signOutBtn');if(out)out.addEventListener('click',function(){signOut().then(function(){updateAccountInfo();});});var saveU=byId('saveUsernameBtn');if(saveU)saveU.addEventListener('click',function(){var uname=byId('usernameInput').value.trim();var chk=validateUsername(uname);if(!chk.ok){alert(chk.msg);return;}upsertProfileUsername(chk.value).then(function(){alert('Nombre de usuario guardado.');updateAccountInfo();}).catch(function(err){if(err&&err.code==='23505'){alert('Ese nombre ya existe. Prueba otro.');}else{alert(err.message||err);}});});var pub=byId('publishSummaryBtn');if(pub)pub.addEventListener('click',function(){publishMySummary().then(function(){alert('Resumen publicado/actualizado.');}).catch(function(err){alert(err.message||err);});});var lf=byId('loadFriendBtn');if(lf)lf.addEventListener('click',function(){var uname=byId('friendUsername').value.trim();if(!uname){alert('Introduce el usuario de tu amigo');return;}fetchFriendSummary(uname).then(function(r){var items=(r&&r.data&&r.data.items)||[];renderFriendSummary(items);addRecentFriend(uname);}).catch(function(err){alert(err.message||err);});});renderRecentFriendsUI();updateAccountInfo();}
+
+// Desactivamos la lógica de la pestaña "Amigos" porque Supabase no está configurado en esta versión. Solo se conservará el inicio de sesión local.
+function initFriends(){
+  // No hacemos nada aquí: la persistencia del enlace mágico se maneja en DOMContentLoaded.
+  return;
+}
 
 /* Account info + friend summary render */
 function updateAccountInfo(){var info=byId('accountInfo');var c=ensureSupa();if(!c){info.innerHTML='Supabase <strong>no configurado</strong>';return;}getCurrentUser().then(function(user){info.innerHTML=user?('Conectado: <strong>'+(user.email||user.id)+'</strong>'):'No has iniciado sesión.';});}
