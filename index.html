@@ -14,10 +14,10 @@
 <style>#errbar{position:fixed;left:0;right:0;bottom:0;background:#b91c1c;color:#fff;padding:8px 12px;font-size:14px;z-index:9999;display:none}#errbar .small{opacity:.9;font-size:12px}</style>
 </head><body>
 <div id="errbar"></div>
-<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.6.5</small></h1>
+<header class="app-header safe-top"><h1>🍽️ Mis Restaurantes <small class="ver">v13.6.7</small></h1>
 <div class="actions"><span id="themeLabel" class="badge">Tema: —</span>
 <div class="theme-chips"><button class="chip" id="chipDark" type="button">🌙 Oscuro</button><button class="chip" id="chipLight" type="button">☀️ Claro</button><button class="chip" id="chipSystem" type="button">🖥️ Automático</button></div>
-<button id="installBtn" class="chip" style="display:none" type="button">⬇️ Instalar</button><span id="jsStatus" class="badge ok">JS iniciando…</span><span id="miniDiag" class="badge">—</span><span id="stepDiag" class="badge">—</span></div></header>
+<button id="installBtn" class="chip" style="display:none" type="button">⬇️ Instalar</button><span id="jsStatus" class="badge ok">JS iniciando…</span><span id="miniDiag" class="badge">—</span><span id="stepDiag" class="badge">init</span></div></header>
 <nav class="tabs scrollable" role="tablist" aria-label="Secciones">
 <button class="tab active" data-tab="add" aria-selected="true">Añadir visita</button>
 <button class="tab" data-tab="summary" aria-selected="false">Resumen</button>
@@ -57,7 +57,7 @@
 <footer class="app-footer safe-bottom"><button id="exportBtn" class="btn secondary">Exportar</button><label class="btn secondary filelabel">Importar<input type="file" id="importInput" accept="application/json" hidden /></label><button id="clearAll" class="btn danger outline">Borrar todo</button><span class="muted">Datos locales; adjuntos no se comparten. Con amigos solo va el resumen.</span></footer>
 
 <script>
-(function(){
+(function(){  // error bar
   function showErr(e, prefix){
     var bar=document.getElementById('errbar'); if(!bar) return;
     var msg='';
@@ -70,7 +70,7 @@
       msg = (prefix?prefix+': ':'') + m + (f?(' @'+f+':'+ln+':'+cn):'');
     }
     bar.style.display='block';
-    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1369 — UA: '+navigator.userAgent+'</div>';
+    bar.innerHTML = msg + '<div class="small">Refresca con ?v=1367 — UA: '+navigator.userAgent+'</div>';
   }
   window.addEventListener('error', function(e){ showErr(e); });
   window.addEventListener('unhandledrejection', function(e){ showErr(e.reason||e, 'Promesa rechazada'); });
@@ -81,15 +81,15 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer
         onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js';s.defer=true;s.onerror=function(){__SHOW_ERR__('No se pudo cargar supabase-js desde dos CDNs');};document.head.appendChild(s);})();"></script>
 <script src="config.js?v=1367" defer></script>
-<!-- Cargamos la nueva versión del script con número de versión actualizado para forzar recarga de caché. -->
-<script src="script.js?v=1369" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';document.getElementById('stepDiag').textContent='boot';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
+<script src="script.js?v=1367" defer onload="document.getElementById('jsStatus').textContent='JS OK';document.getElementById('miniDiag').textContent='Listo';" onerror="__SHOW_ERR__('No se pudo cargar script.js');"></script>
 
 <script>
-(function(){var dp=null,btn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(btn){btn.style.display='inline-flex';btn.onclick=function(){btn.disabled=true;dp.prompt();dp.userChoice.then(function(){btn.disabled=false;});};}});window.addEventListener('appinstalled',function(){if(btn){btn.style.display='none';}});})();
-// Registra el service worker solo en origenes seguros (http/https). En
-// esquemas de archivo (file://) o en localhost no se intenta registrar
-// para evitar errores en navegadores móviles como Safari.
-if('serviceWorker' in navigator && (location.protocol==='https:' || location.protocol==='http:') && location.hostname!=='localhost' && location.hostname!=='127.0.0.1'){
+(function(){
+  var dp=null,btn=document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(btn){btn.style.display='inline-flex';btn.onclick=function(){btn.disabled=true;dp.prompt();dp.userChoice.then(function(){btn.disabled=false;});};}});
+  window.addEventListener('appinstalled',function(){if(btn){btn.style.display='none';}});
+})();
+if('serviceWorker' in navigator && location.hostname!=='localhost' && location.hostname!=='127.0.0.1'){
   window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js');});
 }
 </script>
